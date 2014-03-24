@@ -1,23 +1,41 @@
 <html ng-app="PhotoMirrorApp">
 	<head>
-	</head>
-	<body>
-		<div id="fb-root"></div>
-		<script src="http://connect.facebook.net/en_US/all.js"></script>
 		<script src="angular.min.js"></script>
 		<script src="app.js"></script>
 		<script src="controllers.js"></script>
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<span id="signinButton">
+		  <span
+		    class="g-signin"
+		    data-callback="gSigninCallback"
+		    data-clientid="990881773453-ouk9t9m3hh2rstprqo814fklq82jtlol.apps.googleusercontent.com"
+		    data-cookiepolicy="single_host_origin"
+		    data-scope="https://www.googleapis.com/auth/plus.login https://picasaweb.google.com/data/">
+		  </span>
+		</span>
+		<script src="initfacebook.js"></script>
+		<script src="initgoogle.js"></script>
 		<!--
 		Below we include the Login Button social plugin. This button uses the JavaScript SDK to
 		present a graphical Login button that triggers the FB.login() function when clicked. -->
 
-		<fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+		<div class="fb-login-button" data-size="large" data-show-faces="false"></div>
 
-		<div ng-if="$rootScope.accessToken" ng-controller="FacebookController">
+		<div id="fbalbums" ng-controller="FacebookController">
 			<ul>
 				<li ng-repeat="album in albums">
 					{{ album.name }} : {{ album.count }}
-					<img src={{ album.cover_src }}>
+					<img src='{{ album.cover_src }}'>
+				</li>
+			</ul>
+		</div>
+		<div id="galbums" ng-controller="GoogleController">
+			<ul>
+				<li ng-repeat="album in albums">
+					{{ album.name }} : {{ album.count }}
+					<img src='{{ album.cover_src }}'>
 				</li>
 			</ul>
 		</div>

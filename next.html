@@ -1,0 +1,11 @@
+<html>
+<body>
+<script>
+(function(){ 
+   document.$_GET = [];
+   var urlHalves = String(document.location).split('?');
+   document.write(unescape(urlHalves[1]));
+})();
+</script>
+</body>
+</html>

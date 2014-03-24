@@ -1,32 +1,28 @@
 var photoMirror = angular.module('PhotoMirrorApp', []);
-photoMirror.run(function($rootScope){
-	FB.init({
-					appId      : '601476799944295',
-					status     : true, // check login status
-					cookie     : true, // enable cookies to allow the server to access the session
-					xfbml      : true  // parse XFBML
-				});
-	FB.getLoginStatus(function(response) {
-		if (response.status === 'connected') {
-		// the user is logged in and has authenticated your
-		// app, and response.authResponse supplies
-		// the user's ID, a valid access token, a signed
-		// request, and the time the access token 
-		// and signed request each expire
-		$rootScope.uid = response.authResponse.userID;
-		$rootScope.accessToken = response.authResponse.accessToken;
-
-		} else if (response.status === 'not_authorized') {
-		// the user is logged in to Facebook, 
-		// but has not authenticated your app
-		} else {
-		// the user isn't logged in to Facebook.
-		}
- 	});
-});
-
-photoMirror.service('GetFacebookAlbums', function() {
-    this.sayHello = function() {
-        return "Hello, World!"
-    };
-});
+var facebookAlbums = [];
+var google_auth_token = "";
+var google_user_id = "";
+function gSigninCallback(authResult) {
+	console.log(authResult);
+	console.log(authResult.access_token);
+	google_auth_token = authResult.access_token;
+	gapi.client.load('plus','v1', function(){
+		var request = gapi.client.plus.people.get( {'userId' : 'me'} );
+	    request.execute(function(profile) { 
+	    	console.log(profile);
+	    	google_user_id = profile.id;
+	    });
+	});
+  if (authResult['status']['signed_in']) {
+    // Update the app to reflect a signed in user
+    // Hide the sign-in button now that the user is authorized, for example:
+    document.getElementById('signinButton').setAttribute('style', 'display: none');
+  } else {
+    // Update the app to reflect a signed out user
+    // Possible error values:
+    //   "user_signed_out" - User is signed-out
+    //   "access_denied" - User denied access to your app
+    //   "immediate_failed" - Could not automatically log in the user
+    console.log('Sign-in state: ' + authResult['error']);
+  }
+}

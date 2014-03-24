@@ -25,14 +25,19 @@ function GetFacebookAlbums(){
 			albums = response[0].fql_result_set;
 			coverPhotos = response[1].fql_result_set;
 			facebookAlbums = albums.map(mapCallback,coverPhotos);
-			console.log(facebookAlbums);
+			var dom = document.getElementById('fbalbums');
+			var fbScope = angular.element(dom).scope();
+			fbScope.$apply(function(){
+				fbScope.albums = facebookAlbums;
+			});
+			//console.log(facebookAlbums);
 		}
 	});
 }
 function LoginResponse(response){
 	if (response.authResponse) {
 	// The person logged into your app
-		//GetFacebookAlbums();
+		GetFacebookAlbums();
 	} else {
 	// The person cancelled the login dialog
 	}
@@ -56,7 +61,7 @@ window.fbAsyncInit = function() {
 						// login status of the person. In this case, we're handling the situation where they 
 						// have logged in to the app.
 						//testAPI();
-						//GetFacebookAlbums();
+						GetFacebookAlbums();
 						} else if (response.status === 'not_authorized') {
 						// In this case, the person is logged into Facebook, but not into the app, so we call
 						// FB.login() to prompt them to do so. 
